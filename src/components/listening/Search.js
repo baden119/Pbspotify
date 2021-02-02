@@ -4,7 +4,12 @@ import axios from 'axios';
 
 export class Search extends Component {
     state={
-        show: ''
+        data: [],
+        show: '',
+        show_url:'',
+        episode: '',
+        shows:[],
+        episodes:[]
     };
     
     static propTypes = {
@@ -12,6 +17,19 @@ export class Search extends Component {
     }
 
     onChange = e =>this.setState({ [e.target.name]: e.target.value })
+
+    showChange = e =>{
+        this.setState({ [e.target.name]: e.target.value })
+        this.state.data.map((show) => {
+            if(show.name == e.target.value){this.setState({show_url: show.programRestUrl})}
+        })
+        //HOW DO I GET THIS TO WORK???
+        getEpisodes = async => {
+            const res = await axios
+            .get(this.state.show_url);
+            console.log(res.data);
+          };
+    }
 
     onSubmit = e =>{
         e.preventDefault();
@@ -22,20 +40,24 @@ export class Search extends Component {
     async componentDidMount() {
         const res = await axios
         .get('https://airnet.org.au/rest/stations/3pbs/programs');
-        
-        res.data.map(show => (console.log(show.name)))
+        this.setState({data: res.data})
+        res.data.map((show, index) => {
+            if(show.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
+                this.setState({shows: [...this.state.shows, show.name]});
+            }
+        })
     }
 
     render() {
         return (
             <div>
                 <form onSubmit={this.onSubmit} className="form">
-                    <input type="text" 
-                    name="text" 
-                    placeholder="Search Shows..." 
-                    value={this.state.text}
-                    onChange={this.onChange}
-                    />
+                    <select value={this.state.show} name="show" onChange={this.showChange} id="show_dropdown">
+                        {this.state.shows.map(show => (<option value={show}>{show}</option>))}
+                    </select>
+                    <select id="episode_dropdown">
+                        {this.state.episodes.map(episode => (<option value={episode}>{episode}</option>))}
+                    </select>
                     <input type="submit" 
                     value="Search" 
                     className="btn btn-dark btn-block" 
