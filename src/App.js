@@ -1,22 +1,24 @@
 import React, { Component } from 'react'; 
 import './App.css';
-import Inspector from './components/listening/Inspector';
-import Search from './components/listening/Search';
+import Pbs from './components/listening/Pbs';
 import axios from 'axios';
 
 class App extends Component {
 
   state={
-    songs:[],
-    loading: false
+    programs:[{id:0, name: 'none selected', url: null}]
   }
 
-
-  searchShows = async show => {
-    this.setState({ loading: true });
+//Gets list of PBS shows.
+  async componentDidMount() {
     const res = await axios
-    .get('https://airnet.org.au/rest/stations/3pbs/programs/switched-on/episodes/2020-12-26+13%3A00%3A00/playlists');
-    this.setState ({ songs: res.data, loading: false})
+    .get('https://airnet.org.au/rest/stations/3pbs/programs');
+    // console.log(res.data)
+    res.data.forEach((program, index) => {
+      if(program.programRestUrl !== "https://airnet.org.au/rest/stations/3pbs/programs/"){
+        this.setState({programs: [...this.state.programs, {id: index, name: program.name, url: program.programRestUrl}]});
+      }
+    })
   };
 
 
@@ -24,8 +26,7 @@ class App extends Component {
     return (
       <div className='App'>
         <div className="container">
-          <Search searchShows={this.searchShows} />
-          <Inspector loading={this.state.loading} songs={this.state.songs} />
+          <Pbs programs={this.state.programs} />
         </div>
       </div>
     );
