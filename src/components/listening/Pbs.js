@@ -22,22 +22,33 @@ export class Pbs extends Component {
 
     async getEpisodes(url) {
         const res = await axios
-        .get(`${url}/episodes`)
-        this.setState({episodes: res.data})
+        .get(`${url}/episodes?numAfter=100&numBefore=100`)
+        res.data.sort((a, b) => a.start < b.start ? 1: -1);
+
+        res.data.forEach((episode, index) => {
+            if (!episode.title){
+                episode.title = '(No Episode Title Found)'
+            };
+            this.setState({episodes: [...this.state.episodes, {id: index, isSelected: false, episodeData: episode}]});
+          })
+
+        // this.setState({episodes: res.data});
     }
 
     render() {
         return (
             <div>
+                <div>
                     <select value={this.state.selected_program} name="selected_program" onChange={e => this.getURL(e)} id="program_select_dropdown">
                         {this.props.programs.map(program => (
                             <option key={program.id} value={program.id}>{program.name}</option>))}
                     </select>
-                     <div style={episodeStyle}>
+                </div>
+                <div style={episodeStyle}>
                      {this.state.episodes.map(episode => (
-                         <Episodeitem key={episode.id} episode={episode} />
+                         <EpisodeItem key={episode.id} episode={episode} />
                      ))}
-                    </div>
+                </div>
             </div>
         )
     }
@@ -45,7 +56,7 @@ export class Pbs extends Component {
 const episodeStyle = {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
-    gridGap: '1rem'
+    gridGap: '1rem',
 }
 
 export default Pbs
