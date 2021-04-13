@@ -1,12 +1,12 @@
 import React, { Component } from 'react'; 
 import './App.css';
-import Pbs from './components/listening/Pbs';
+import Pbs from './components/Pbs/Pbs';
 import axios from 'axios';
 
 class App extends Component {
 
   state={
-    programs:[{id:0, name: 'none selected', url: null}]
+    programs:[{id:0, name: 'Select Show', url: null}]
   }
 
 //Gets list of PBS shows.

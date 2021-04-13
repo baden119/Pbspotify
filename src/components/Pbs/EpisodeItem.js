@@ -4,16 +4,16 @@ import React from 'react'
 // import PropTypes from "prop-types";
 
 //Get this to work, maybe by changin it to a proper component.
-onCheckboxChange(id) {
-    //will sent the episode id back to the pbs component, which will toggle the isSelected value of the
-    //episode object.
-    //Then, by looping through the episodes it should be possible to get a list of selected episodes, with
-    //accompanying playlist URLS, in order to create a list of songs to pass back to the app.js for a hypothetical
-    //Spotify component.
+// onCheckboxChange(id) {
+//     //will sent the episode id back to the pbs component, which will toggle the isSelected value of the
+//     //episode object.
+//     //Then, by looping through the episodes it should be possible to get a list of selected episodes, with
+//     //accompanying playlist URLS, in order to create a list of songs to pass back to the app.js for a hypothetical
+//     //Spotify component.
     
-    console.log(id)
+//     console.log(id)
 
-};
+// };
 const EpisodeItem = ({episode}) => {
 
     return (
@@ -24,7 +24,7 @@ const EpisodeItem = ({episode}) => {
                 type="checkbox"
                 name={episode.id}
                 checked={episode.isSelected}
-                onChange={onCheckboxChange(episode.id)}
+                // onChange={onCheckboxChange(episode.id)}
             /></h4>
             <a href={`${episode.episodeData.episodeRestUrl}/playlists`}>{episode.episodeData.start}</a>
         </div>
